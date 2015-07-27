@@ -158,6 +158,7 @@ public class MainActivity extends ActionBarActivity
         dbhelper = new DBHelper(this);
         db = dbhelper.getWritableDatabase();
 
+        //Создадим список команд
         String query = "SELECT name FROM teams";
         Cursor c = db.rawQuery(query, null);
         if (c != null)
@@ -346,7 +347,6 @@ public class MainActivity extends ActionBarActivity
             long rowID = db.insert("teams", null, contentValues);
             Log.d("TAG", "Вставили " + rowID);
             editTextTeamName.setText("");
-            //Toast.makeText(this, "Вставили " + rowID, Toast.LENGTH_SHORT).show();
         } else
         {
             Log.d("TAG", "Команда уже есть в списке.");
