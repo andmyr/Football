@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_addTeam"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextTeamName"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/tv_teamName"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnAddPhoto"
+        android:id="@+id/buttonAddPhoto"
+        android:layout_below="@+id/editTextTeamName"
+        android:layout_centerHorizontal="true"
+        android:onClick="onAddLogoClick"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnSave"
+        android:id="@+id/buttonSave"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onSaveClick"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/buttonAddPhoto"
+        android:contentDescription="pic"
+        android:layout_above="@+id/buttonSave"/>
+
+</RelativeLayout>

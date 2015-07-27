@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">FootballTable</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="screen_array">
+        <item>Добавить команду</item>
+        <item>Добавить игру</item>
+        <item>Просмотреть итоговую таблицу</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_search">Search</string>
+    <string name="page">Page:</string>
+    <string name="btnAddPhoto">Добавить эмблему команды</string>
+    <string name="btnSave">Сохранить команду</string>
+    <string name="tvAddCommand">Добавьте команду</string>
+    <string name="hint_add_command">Введите имя новой команды</string>
+    <string name="tvAddGame">Добавьте игру</string>
+    <string name="firstTeamName">Название первой команды</string>
+    <string name="SecondTeamName">Название второй команды</string>
+    <string name="tv_addTeam">Добавьте команду</string>
+    <string name="tv_teamName">Название команды</string>
+    <string name="btnAddGame">Сохранить игру</string>
+    <string name="str_reload_teams">Обновить список команд</string>
+</resources>
