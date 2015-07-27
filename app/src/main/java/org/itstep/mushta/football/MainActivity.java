@@ -32,18 +32,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity
 {
+    final int CAMERA_CAPTURE = 1;
+    final int PIC_CROP = 2;
     private String[] mScreenTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private DBHelper dbhelper;
-    //private Integer teamIDCounter = 1;
-
-    final int CAMERA_CAPTURE = 1;
-    final int PIC_CROP = 2;
     private Uri picUri;
     private EditText editTextTeam1Goals;
     private EditText editTextTeam2Goals;
@@ -107,7 +104,6 @@ public class MainActivity extends ActionBarActivity
             selectItem(0);
         }
         dbhelper = new DBHelper(this);
-
     }
 
 
@@ -151,8 +147,6 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    //Обновляем игру после запроса подтверждения
-
     public void okClicked()
     {
         editTextTeam1Goals.setText("");
@@ -185,19 +179,14 @@ public class MainActivity extends ActionBarActivity
             }
             c.close();
         }
-
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner2 = (Spinner) findViewById(R.id.spinner2);
-
         // адаптер
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
         spinner.setAdapter(adapter);
-        // заголовок
         spinner.setPrompt("Title");
-        // выделяем элемент
         spinner.setSelection(0);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -205,7 +194,6 @@ public class MainActivity extends ActionBarActivity
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id)
             {
-                //Toast.makeText(getBaseContext(), "Position = " + position + " " + teamList.get(position), Toast.LENGTH_SHORT).show();
                 team1 = teamList.get(position);
             }
 
@@ -220,11 +208,8 @@ public class MainActivity extends ActionBarActivity
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
         spinner2.setAdapter(adapter2);
-        // заголовок
         spinner2.setPrompt("Title");
-        // выделяем элемент
         spinner2.setSelection(0);
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -232,7 +217,6 @@ public class MainActivity extends ActionBarActivity
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id)
             {
-                //Toast.makeText(getBaseContext(), "Position = " + position + " " + teamList.get(position), Toast.LENGTH_SHORT).show();
                 team2 = teamList.get(position);
             }
 
@@ -325,11 +309,8 @@ public class MainActivity extends ActionBarActivity
     public void onSaveClick(View view)
     {
         EditText editTextTeamName = (EditText) findViewById(R.id.editTextTeamName);
-
-
         db = dbhelper.getWritableDatabase();
-
-//Проверка на пустоту базы
+        //Проверка на пустоту базы
         Cursor c = db.rawQuery("SELECT * FROM Teams", null);
         boolean dBEmpty = true;
         if (c.getCount() < 1)
@@ -339,7 +320,7 @@ public class MainActivity extends ActionBarActivity
         {
             dBEmpty = false;
         }
-//Проверка на повторяемости имени команды
+        //Проверка на повторяемости имени команды
         boolean nameExistsInDB = false;
         if (!dBEmpty)
         {
@@ -356,7 +337,6 @@ public class MainActivity extends ActionBarActivity
         {
             ContentValues contentValues = new ContentValues();
             contentValues.put("name", editTextTeamName.getText().toString());
-            //contentValues.put("ID", teamIDCounter++);
             contentValues.put("total_games", 0);
             contentValues.put("win", 0);
             contentValues.put("draw", 0);
@@ -482,7 +462,6 @@ public class MainActivity extends ActionBarActivity
 
     public void onSaveGameClick(View view)
     {
-
         editTextTeam1Goals = (EditText) findViewById(R.id.editTextTeam1Goals);
         editTextTeam2Goals = (EditText) findViewById(R.id.editTextTeam2Goals);
 
@@ -507,11 +486,8 @@ public class MainActivity extends ActionBarActivity
             Toast.makeText(this, "Введите число голов второй команды", Toast.LENGTH_SHORT);
             return;
         }*/
-
-
         int team1Goals = 0;
         int team2Goals = 0;
-
         try
         {
             team1Goals = Integer.valueOf(editTextTeam1Goals.getText().toString());
@@ -522,25 +498,9 @@ public class MainActivity extends ActionBarActivity
         }
 
         db = dbhelper.getWritableDatabase();
-
-        /*//Проверка наличие команд в таблце
-        Cursor c = db.rawQuery("SELECT Name FROM Teams WHERE Name = '" + team1 + "'", null);
-        if (c.getCount() < 1)
-        {
-            Toast.makeText(this, team1 + " нет в списке команд.", Toast.LENGTH_SHORT);
-            return;
-        }
-
-        c = db.rawQuery("SELECT Name FROM Teams WHERE Name = '" + team2 + "'", null);
-        if (c.getCount() < 1)
-        {
-            Toast.makeText(this, team2 + " нет в списке команд.", Toast.LENGTH_SHORT);
-            return;
-        }*/
-
         if (team1.equals(team2))
         {
-            Toast.makeText(this, "Выберете разные команды!",Toast.LENGTH_LONG);
+            Toast.makeText(this, "Выберете разные команды!", Toast.LENGTH_LONG);
             return;
         }
 
@@ -557,19 +517,14 @@ public class MainActivity extends ActionBarActivity
 
             editTextTeam1Goals.setText("");
             editTextTeam2Goals.setText("");
-            //Пересчет общего числа очков
-
-
         } else
         {
             Toast.makeText(this, "Есть такая игра, обновляем!.", Toast.LENGTH_SHORT);
             Log.d("TAG", "Есть такая игра, запрос о обновлении");
             overrideGame();
-
         }
 
         //TODO Пересчет очков после добавления игры
-
     }
 
     public void overrideGame()
