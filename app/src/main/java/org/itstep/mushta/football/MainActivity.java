@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item, mScreenTitles));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -186,7 +186,7 @@ public class MainActivity extends ActionBarActivity
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         // адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, strTeamList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, strTeamList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
@@ -209,7 +209,7 @@ public class MainActivity extends ActionBarActivity
         });
 
         // адаптер
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, strTeamList);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, strTeamList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner2.setAdapter(adapter2);
@@ -316,14 +316,8 @@ public class MainActivity extends ActionBarActivity
         db = dbhelper.getWritableDatabase();
         //Проверка на пустоту базы
         Cursor c = db.rawQuery("SELECT * FROM Teams", null);
-        boolean dBEmpty = true;
-        if (c.getCount() < 1)
-        {
-            dBEmpty = true;
-        } else
-        {
-            dBEmpty = false;
-        }
+        boolean dBEmpty;
+        dBEmpty = (c.getCount() < 1) ? true : false;
         //Проверка на повторяемости имени команды
         boolean nameExistsInDB = false;
         if (!dBEmpty)
@@ -510,7 +504,32 @@ public class MainActivity extends ActionBarActivity
         Team team1 = getTeamFromDB(strTeam1);
         Team team2 = getTeamFromDB(strTeam2);
 
+        team1.addGame(team1Goals, team2Goals);
+        team2.addGame(team2Goals, team1Goals);
+
+        updateTeamScore(team1);
+        updateTeamScore(team2);
+
+
     }
+
+    /**
+     * Обновление команды в базе
+     *
+     * @param team - объект типа Team
+     */
+
+    private void updateTeamScore(Team team)
+    {
+
+    }
+
+    /**
+     * Загрузка по имени из базу и создание объекта типа Team
+     *
+     * @param strTeam - имя команды
+     * @return объект типа Team
+     */
 
     private Team getTeamFromDB(String strTeam)
     {
