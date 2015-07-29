@@ -28,6 +28,27 @@ public class Team
     }
 
     /**
+     *
+     * @param name - Имя
+     * @param totalGames - Сыграно игр
+     * @param win - побед
+     * @param draw - ничей
+     * @param loss - поражений
+     * @param goalsOut - забито голов
+     * @param goalsIn - пропущено голов
+     */
+    public Team(String name, int totalGames, int win, int draw, int loss, int goalsOut, int goalsIn)
+    {
+        this.name = name;
+        this.totalGames = totalGames;
+        this.win = win;
+        this.draw = draw;
+        this.loss = loss;
+        this.goalsOut = goalsOut;
+        this.goalsIn = goalsIn;
+    }
+
+    /**
      * @param firstTeamScore  - Число забитых голов
      * @param secondTeamScore - Число пропущеных голов
      */
@@ -48,6 +69,8 @@ public class Team
         goalsOut +=firstTeamScore;
         goalsIn +=secondTeamScore;
     }
+
+
 
     public String getName()
     {

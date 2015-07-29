@@ -44,12 +44,15 @@ public class MainActivity extends ActionBarActivity
     private Uri picUri;
     private EditText editTextTeam1Goals;
     private EditText editTextTeam2Goals;
-    private ArrayList<String> teamList = new ArrayList<>();
-    private String team1;
-    private String team2;
+    private ArrayList<String> strTeamList = new ArrayList<>(); //список для хранения имен команд
+    private String strTeam1;
+    private String strTeam2;
     public Spinner spinner;
     public Spinner spinner2;
     private SQLiteDatabase db;
+
+    private ArrayList<Team> teamList = new ArrayList<>();
+    private Team team;
 
 
     @Override
@@ -172,7 +175,7 @@ public class MainActivity extends ActionBarActivity
                     for (String cn : c.getColumnNames())
                     {
                         str = str.concat(c.getString(c.getColumnIndex(cn)));
-                        teamList.add(str);
+                        strTeamList.add(str);
                     }
                     Log.d("TAG", str);
 
@@ -183,7 +186,7 @@ public class MainActivity extends ActionBarActivity
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         // адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, strTeamList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
@@ -195,18 +198,18 @@ public class MainActivity extends ActionBarActivity
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id)
             {
-                team1 = teamList.get(position);
+                strTeam1 = strTeamList.get(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0)
             {
-                team1 = teamList.get(0);
+                strTeam1 = strTeamList.get(0);
             }
         });
 
         // адаптер
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamList);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, strTeamList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner2.setAdapter(adapter2);
@@ -218,13 +221,13 @@ public class MainActivity extends ActionBarActivity
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id)
             {
-                team2 = teamList.get(position);
+                strTeam2 = strTeamList.get(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0)
             {
-                team2 = teamList.get(0);
+                strTeam2 = strTeamList.get(0);
             }
         });
     }
@@ -464,28 +467,6 @@ public class MainActivity extends ActionBarActivity
     {
         editTextTeam1Goals = (EditText) findViewById(R.id.editTextTeam1Goals);
         editTextTeam2Goals = (EditText) findViewById(R.id.editTextTeam2Goals);
-
-        /*//проверка на пустоту
-        if (editTextTeam1.length() < 1)
-        {
-            Toast.makeText(this, "Введите название первой команды", Toast.LENGTH_SHORT);
-            return;
-        }
-        if (editTextTeam2.length() < 1)
-        {
-            Toast.makeText(this, "Введите название второй команды", Toast.LENGTH_SHORT);
-            return;
-        }
-        if (editTextTeam1Goals.length() < 1)
-        {
-            Toast.makeText(this, "Введите число голов первой команды", Toast.LENGTH_SHORT);
-            return;
-        }
-        if (editTextTeam2Goals.length() < 1)
-        {
-            Toast.makeText(this, "Введите число голов второй команды", Toast.LENGTH_SHORT);
-            return;
-        }*/
         int team1Goals = 0;
         int team2Goals = 0;
         try
@@ -498,21 +479,21 @@ public class MainActivity extends ActionBarActivity
         }
 
         db = dbhelper.getWritableDatabase();
-        if (team1.equals(team2))
+        if (strTeam1.equals(strTeam2))
         {
             Toast.makeText(this, "Выберете разные команды!", Toast.LENGTH_LONG);
             return;
         }
 
         //Проверка на наличие такой же игры
-        Cursor c = db.rawQuery("SELECT first_team, second_team FROM Games WHERE ((first_team = '" + team1 + "' AND second_team = '" + team2 + "')" +
-                " OR (first_team = '" + team2 + "' AND second_team = '" + team1 + "'))", null);
+        Cursor c = db.rawQuery("SELECT first_team, second_team FROM Games WHERE ((first_team = '" + strTeam1 + "' AND second_team = '" + strTeam2 + "')" +
+                " OR (first_team = '" + strTeam2 + "' AND second_team = '" + strTeam1 + "'))", null);
         if (c.getCount() < 1)
         {
             Toast.makeText(this, "Нет такой игры, добавляем!.", Toast.LENGTH_SHORT);
             Log.d("TAG", "Нет такой игры, добавляем в базу");
             String insertQuery = "INSERT INTO games (first_team, second_team, first_team_score, second_team_score)" +
-                    " VALUES (" + team1 + ", " + team2 + ", " + team1Goals + ", " + team2Goals + ")";
+                    " VALUES (" + strTeam1 + ", " + strTeam2 + ", " + team1Goals + ", " + team2Goals + ")";
             db.execSQL(insertQuery);
 
             editTextTeam1Goals.setText("");
@@ -524,7 +505,43 @@ public class MainActivity extends ActionBarActivity
             overrideGame();
         }
 
-        //TODO Пересчет очков после добавления игры
+
+        //Пересчет очков после добавления игры
+        Team team1 = getTeamFromDB(strTeam1);
+        Team team2 = getTeamFromDB(strTeam2);
+
+    }
+
+    private Team getTeamFromDB(String strTeam)
+    {
+        Team team = null;
+        String query = "SELECT * FROM teams WHERE Name='" + strTeam + "'";
+        db = dbhelper.getWritableDatabase();
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst())
+        {
+            int nameColIndex = c.getColumnIndex("name");
+            int totalGamesColIndex = c.getColumnIndex("total_games");
+            int winColIndex = c.getColumnIndex("win");
+            int drawColIndex = c.getColumnIndex("draw");
+            int lossColIndex = c.getColumnIndex("loss");
+            int goalsOutColIndex = c.getColumnIndex("goals_out");
+            int goalsInColIndex = c.getColumnIndex("goals_in");
+
+            String name = c.getString(nameColIndex);
+            int totalGames = Integer.valueOf(c.getString(totalGamesColIndex));
+            int win = Integer.getInteger(c.getString(winColIndex));
+            int draw = Integer.getInteger(c.getString(drawColIndex));
+            int loss = Integer.getInteger(c.getString(lossColIndex));
+            int goalsOut = Integer.getInteger(c.getString(goalsOutColIndex));
+            int goalsIn = Integer.getInteger(c.getString(goalsInColIndex));
+
+            team = new Team(name, totalGames, win, draw, loss, goalsOut, goalsIn);
+
+        }
+
+        return team;
     }
 
     public void overrideGame()

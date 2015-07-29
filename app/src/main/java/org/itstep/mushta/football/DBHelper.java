@@ -52,4 +52,6 @@ public class DBHelper extends SQLiteOpenHelper
         // Создаём новую таблицу
         onCreate(sqLiteDatabase);
     }
+
+
 }
