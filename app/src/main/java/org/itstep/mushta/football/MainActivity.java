@@ -517,18 +517,18 @@ public class MainActivity extends ActionBarActivity
 
     private void updateTeamScore(Team team)
     {
-        /*String query = "UPDATE teams " +
-                "SET total_games =" + team.getTotalGames() +
+        String query = "UPDATE teams" +
+                " SET total_games = " + team.getTotalGames() +
                 ", win = " + team.getWin() +
                 ", draw = " + team.getDraw() +
                 ", loss = " + team.getLoss() +
                 ", goals_out = " + team.getGoalsOut() +
                 " ,goals_in = " + team.getGoalsIn() +
-                " WHERE Name = '" + team.getName() + "'";*/
+                " WHERE Name = '" + team.getName() + "'";
 
-        String query = "UPDATE teams" +
+       /* String query = "UPDATE teams" +
                 " SET total_games = 4, win = 1, draw = 0, loss = 2, goals_out = 1, goals_in = 4" +
-                " WHERE Name ='1'";
+                " WHERE Name ='1'";*/
 
         db = dbhelper.getWritableDatabase();
         db.execSQL(query);
