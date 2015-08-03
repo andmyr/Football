@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,10 +31,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
 {
     final int CAMERA_CAPTURE = 1;
     final int PIC_CROP = 2;
+
+    public Spinner spinner;
+    public Spinner spinner2;
+
     private String[] mScreenTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -47,8 +52,7 @@ public class MainActivity extends ActionBarActivity
     private ArrayList<String> strTeamList = new ArrayList<>(); //список для хранения имен команд
     private String strTeam1;
     private String strTeam2;
-    public Spinner spinner;
-    public Spinner spinner2;
+
     private SQLiteDatabase db;
 
     private ArrayList<Team> teamList = new ArrayList<>();
@@ -317,7 +321,7 @@ public class MainActivity extends ActionBarActivity
         //Проверка на пустоту базы
         Cursor c = db.rawQuery("SELECT * FROM Teams", null);
         boolean dBEmpty;
-        dBEmpty = (c.getCount() < 1) ? true : false;
+        dBEmpty = (c.getCount() < 1);
         //Проверка на повторяемости имени команды
         boolean nameExistsInDB = false;
         if (!dBEmpty)
@@ -349,6 +353,7 @@ public class MainActivity extends ActionBarActivity
             Log.d("TAG", "Команда уже есть в списке.");
             Toast.makeText(this, "Команда уже есть в списке.", Toast.LENGTH_LONG).show();
         }
+        c.close();
         db.close();
     }
 
@@ -468,13 +473,13 @@ public class MainActivity extends ActionBarActivity
             team2Goals = Integer.valueOf(editTextTeam2Goals.getText().toString());
         } catch (Exception e)
         {
-            Toast.makeText(this, "Неверный формат счета игры", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Неверный формат счета игры", Toast.LENGTH_SHORT).show();
         }
 
         db = dbhelper.getWritableDatabase();
         if (strTeam1.equals(strTeam2))
         {
-            Toast.makeText(this, "Выберете разные команды!", Toast.LENGTH_LONG);
+            Toast.makeText(this, "Выберете разные команды!", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -483,7 +488,7 @@ public class MainActivity extends ActionBarActivity
                 " OR (first_team = '" + strTeam2 + "' AND second_team = '" + strTeam1 + "'))", null);
         if (c.getCount() < 1)
         {
-            Toast.makeText(this, "Нет такой игры, добавляем!.", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Нет такой игры, добавляем!.", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Нет такой игры, добавляем в базу");
             String insertQuery = "INSERT INTO games (first_team, second_team, first_team_score, second_team_score)" +
                     " VALUES (" + strTeam1 + ", " + strTeam2 + ", " + team1Goals + ", " + team2Goals + ")";
@@ -493,11 +498,12 @@ public class MainActivity extends ActionBarActivity
             editTextTeam2Goals.setText("");
         } else
         {
-            Toast.makeText(this, "Есть такая игра, обновляем!.", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Есть такая игра, обновляем!.", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Есть такая игра, запрос о обновлении");
             overrideGame();
         }
 
+        c.close();
         //Пересчет очков после добавления игры
         Team team1 = getTeamFromDB(strTeam1);
         Team team2 = getTeamFromDB(strTeam2);
@@ -569,7 +575,7 @@ public class MainActivity extends ActionBarActivity
             team = new Team(name, totalGames, win, draw, loss, goalsOut, goalsIn);
 
         }
-
+        c.close();
         return team;
     }
 
