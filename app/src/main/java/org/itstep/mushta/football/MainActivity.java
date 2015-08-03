@@ -416,7 +416,6 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-
     //Добавление картинки в базу
    /* public void insertImg(int id , Bitmap img ) {
 
@@ -499,7 +498,6 @@ public class MainActivity extends ActionBarActivity
             overrideGame();
         }
 
-
         //Пересчет очков после добавления игры
         Team team1 = getTeamFromDB(strTeam1);
         Team team2 = getTeamFromDB(strTeam2);
@@ -509,8 +507,6 @@ public class MainActivity extends ActionBarActivity
 
         updateTeamScore(team1);
         updateTeamScore(team2);
-
-
     }
 
     /**
@@ -521,7 +517,21 @@ public class MainActivity extends ActionBarActivity
 
     private void updateTeamScore(Team team)
     {
+        /*String query = "UPDATE teams " +
+                "SET total_games =" + team.getTotalGames() +
+                ", win = " + team.getWin() +
+                ", draw = " + team.getDraw() +
+                ", loss = " + team.getLoss() +
+                ", goals_out = " + team.getGoalsOut() +
+                " ,goals_in = " + team.getGoalsIn() +
+                " WHERE Name = '" + team.getName() + "'";*/
 
+        String query = "UPDATE teams" +
+                " SET total_games = 4, win = 1, draw = 0, loss = 2, goals_out = 1, goals_in = 4" +
+                " WHERE Name ='1'";
+
+        db = dbhelper.getWritableDatabase();
+        db.rawQuery(query, null);
     }
 
     /**
@@ -540,7 +550,7 @@ public class MainActivity extends ActionBarActivity
 
         if (c.moveToFirst())
         {
-            int nameColIndex = c.getColumnIndex("name");
+            int nameColIndex = c.getColumnIndex("Name");
             int totalGamesColIndex = c.getColumnIndex("total_games");
             int winColIndex = c.getColumnIndex("win");
             int drawColIndex = c.getColumnIndex("draw");
@@ -549,12 +559,12 @@ public class MainActivity extends ActionBarActivity
             int goalsInColIndex = c.getColumnIndex("goals_in");
 
             String name = c.getString(nameColIndex);
-            int totalGames = Integer.valueOf(c.getString(totalGamesColIndex));
-            int win = Integer.getInteger(c.getString(winColIndex));
-            int draw = Integer.getInteger(c.getString(drawColIndex));
-            int loss = Integer.getInteger(c.getString(lossColIndex));
-            int goalsOut = Integer.getInteger(c.getString(goalsOutColIndex));
-            int goalsIn = Integer.getInteger(c.getString(goalsInColIndex));
+            int totalGames = c.getInt(totalGamesColIndex);
+            int win = c.getInt(winColIndex);
+            int draw = c.getInt(drawColIndex);
+            int loss = c.getInt(lossColIndex);
+            int goalsOut = c.getInt(goalsOutColIndex);
+            int goalsIn = c.getInt(goalsInColIndex);
 
             team = new Team(name, totalGames, win, draw, loss, goalsOut, goalsIn);
 

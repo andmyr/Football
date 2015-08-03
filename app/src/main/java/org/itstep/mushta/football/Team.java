@@ -7,14 +7,14 @@ import android.graphics.Bitmap;
  */
 public class Team
 {
-    String name;
-    Bitmap bitmap;
-    int totalGames;
-    int win;
-    int draw;
-    int loss;
-    int goalsOut;
-    int goalsIn;
+    private String name;
+    private Bitmap bitmap;
+    private int totalGames;
+    private int win;
+    private int draw;
+    private int loss;
+    private int goalsOut;
+    private int goalsIn;
 
     public Team(String name)
     {
@@ -28,14 +28,13 @@ public class Team
     }
 
     /**
-     *
-     * @param name - Имя
+     * @param name       - Имя
      * @param totalGames - Сыграно игр
-     * @param win - побед
-     * @param draw - ничей
-     * @param loss - поражений
-     * @param goalsOut - забито голов
-     * @param goalsIn - пропущено голов
+     * @param win        - побед
+     * @param draw       - ничей
+     * @param loss       - поражений
+     * @param goalsOut   - забито голов
+     * @param goalsIn    - пропущено голов
      */
     public Team(String name, int totalGames, int win, int draw, int loss, int goalsOut, int goalsIn)
     {
@@ -66,10 +65,9 @@ public class Team
         {
             draw++;
         }
-        goalsOut +=firstTeamScore;
-        goalsIn +=secondTeamScore;
+        goalsOut += firstTeamScore;
+        goalsIn += secondTeamScore;
     }
-
 
 
     public String getName()
