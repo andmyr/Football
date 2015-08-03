@@ -531,7 +531,7 @@ public class MainActivity extends ActionBarActivity
                 " WHERE Name ='1'";
 
         db = dbhelper.getWritableDatabase();
-        db.rawQuery(query, null);
+        db.execSQL(query);
     }
 
     /**
