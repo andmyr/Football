@@ -21,4 +21,5 @@
     <string name="tv_teamName">Название команды</string>
     <string name="btnAddGame">Сохранить игру</string>
     <string name="str_reload_teams">Обновить список команд</string>
+    <string name="btnRaiting">Общий рейтинг</string>
 </resources>

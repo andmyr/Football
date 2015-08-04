@@ -15,6 +15,7 @@ public class Team
     private int loss;
     private int goalsOut;
     private int goalsIn;
+    private int total;
 
     public Team(String name)
     {
@@ -25,6 +26,7 @@ public class Team
         this.loss = 0;
         this.goalsOut = 0;
         this.goalsIn = 0;
+        this.total = 0;
     }
 
     /**
@@ -35,8 +37,9 @@ public class Team
      * @param loss       - поражений
      * @param goalsOut   - забито голов
      * @param goalsIn    - пропущено голов
+     * @param total      - всего очков
      */
-    public Team(String name, int totalGames, int win, int draw, int loss, int goalsOut, int goalsIn)
+    public Team(String name, int totalGames, int win, int draw, int loss, int goalsOut, int goalsIn, int total)
     {
         this.name = name;
         this.totalGames = totalGames;
@@ -45,6 +48,7 @@ public class Team
         this.loss = loss;
         this.goalsOut = goalsOut;
         this.goalsIn = goalsIn;
+        this.total = total;
     }
 
     /**
@@ -58,12 +62,14 @@ public class Team
         if (firstTeamScore > secondTeamScore)
         {
             win++;
+            total += 3;
         } else if (firstTeamScore < secondTeamScore)
         {
             loss++;
         } else
         {
             draw++;
+            total += 1;
         }
         goalsOut += firstTeamScore;
         goalsIn += secondTeamScore;
@@ -113,5 +119,10 @@ public class Team
     public void setBitmap(Bitmap bitmap)
     {
         this.bitmap = bitmap;
+    }
+
+    public int getTotal()
+    {
+        return total;
     }
 }

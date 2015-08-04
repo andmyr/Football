@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
     private SQLiteDatabase db;
 
     private ArrayList<Team> teamList = new ArrayList<>();
-    private Team team;
+    //private Team team;
 
 
     @Override
@@ -345,6 +345,7 @@ public class MainActivity extends AppCompatActivity
             contentValues.put("loss", 0);
             contentValues.put("goals_out", 0);
             contentValues.put("goals_in", 0);
+            contentValues.put("total", 0);
             long rowID = db.insert("teams", null, contentValues);
             Log.d("TAG", "Вставили " + rowID);
             editTextTeamName.setText("");
@@ -530,6 +531,7 @@ public class MainActivity extends AppCompatActivity
                 ", loss = " + team.getLoss() +
                 ", goals_out = " + team.getGoalsOut() +
                 " ,goals_in = " + team.getGoalsIn() +
+                " ,total = " + team.getTotal() +
                 " WHERE Name = '" + team.getName() + "'";
 
        /* String query = "UPDATE teams" +
@@ -563,6 +565,7 @@ public class MainActivity extends AppCompatActivity
             int lossColIndex = c.getColumnIndex("loss");
             int goalsOutColIndex = c.getColumnIndex("goals_out");
             int goalsInColIndex = c.getColumnIndex("goals_in");
+            int totalIndex = c.getColumnIndex("total");
 
             String name = c.getString(nameColIndex);
             int totalGames = c.getInt(totalGamesColIndex);
@@ -571,8 +574,9 @@ public class MainActivity extends AppCompatActivity
             int loss = c.getInt(lossColIndex);
             int goalsOut = c.getInt(goalsOutColIndex);
             int goalsIn = c.getInt(goalsInColIndex);
+            int total = c.getInt(totalIndex);
 
-            team = new Team(name, totalGames, win, draw, loss, goalsOut, goalsIn);
+            team = new Team(name, totalGames, win, draw, loss, goalsOut, goalsIn, total);
 
         }
         c.close();
@@ -586,4 +590,38 @@ public class MainActivity extends AppCompatActivity
         myDialogFragment.show(manager, "dialog");
     }
 
+    public void onLoadRatingClick(View view)
+    {
+        teamList.clear();
+        String query = "SELECT * FROM teams ORDER BY total DESC";
+        db = dbhelper.getWritableDatabase();
+        Cursor c = db.rawQuery(query, null);
+        if (c.moveToFirst())
+        {
+            do
+            {
+                int nameColIndex = c.getColumnIndex("Name");
+                int totalGamesColIndex = c.getColumnIndex("total_games");
+                int winColIndex = c.getColumnIndex("win");
+                int drawColIndex = c.getColumnIndex("draw");
+                int lossColIndex = c.getColumnIndex("loss");
+                int goalsOutColIndex = c.getColumnIndex("goals_out");
+                int goalsInColIndex = c.getColumnIndex("goals_in");
+                int totalIndex = c.getColumnIndex("total");
+
+                String name = c.getString(nameColIndex);
+                int totalGames = c.getInt(totalGamesColIndex);
+                int win = c.getInt(winColIndex);
+                int draw = c.getInt(drawColIndex);
+                int loss = c.getInt(lossColIndex);
+                int goalsOut = c.getInt(goalsOutColIndex);
+                int goalsIn = c.getInt(goalsInColIndex);
+                int total = c.getInt(totalIndex);
+
+                teamList.add(new Team(name, totalGames, win, draw, loss, goalsOut, goalsIn, total));
+            }
+            while (c.moveToNext());
+        }
+        c.close();
+    }
 }
