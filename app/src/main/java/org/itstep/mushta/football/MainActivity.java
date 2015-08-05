@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,6 +30,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private SQLiteDatabase db;
 
     private ArrayList<Team> teamList = new ArrayList<>();
+    private Bitmap thePic;
     //private Team team;
 
 
@@ -346,6 +349,12 @@ public class MainActivity extends AppCompatActivity
             contentValues.put("goals_out", 0);
             contentValues.put("goals_in", 0);
             contentValues.put("total", 0);
+
+            if (thePic != null)
+            {
+                contentValues.put("picture", getBytes(thePic));
+            }
+
             long rowID = db.insert("teams", null, contentValues);
             Log.d("TAG", "Вставили " + rowID);
             editTextTeamName.setText("");
@@ -392,10 +401,13 @@ public class MainActivity extends AppCompatActivity
             {
                 Bundle extras = data.getExtras();
                 // Получим кадрированное изображение
-                Bitmap thePic = extras.getParcelable("data");
+                thePic = extras.getParcelable("data");
                 // передаём его в ImageView
                 ImageView picView = (ImageView) findViewById(R.id.imageView);
                 picView.setImageBitmap(thePic);
+                // Запись картинки в базу
+                //TODO Переделать на добавление объекта Team
+                //insert(getBytes(thePic));
             }
         }
     }
@@ -423,43 +435,39 @@ public class MainActivity extends AppCompatActivity
     }
 
     //Добавление картинки в базу
-   /* public void insertImg(int id , Bitmap img ) {
-
-
-        byte[] data = getBitmapAsByteArray(img); // this is a function
-
-        insertStatement_logo.bindLong(1, id);
-        insertStatement_logo.bindBlob(2, data);
-
-        insertStatement_logo.executeInsert();
-        insertStatement_logo.clearBindings() ;
-
+    public long insert(byte[] image)
+    {
+        return db.insert("teams", null, createContentValues(image));
     }
 
-    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-        return outputStream.toByteArray();
+    private ContentValues createContentValues(byte[] image)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("picture", image);
+        return cv;
     }
 
 
     //Получение картинки из базы
-    public Bitmap getImage(int i){
+    public Bitmap getImage(String name)
+    {
 
-        String qu = "select img  from table where feedid=" + i ;
-        Cursor cur = db.rawQuery(qu, null);
+        String query = "select picture from teams where name=" + name;
+        Cursor cur = db.rawQuery(query, null);
 
-        if (cur.moveToFirst()){
+        if (cur.moveToFirst())
+        {
             byte[] imgByte = cur.getBlob(0);
             cur.close();
             return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
         }
-        if (cur != null && !cur.isClosed()) {
+        if (cur != null && !cur.isClosed())
+        {
             cur.close();
         }
 
-        return null ;
-    }*/
+        return null;
+    }
 
 
     public void onSaveGameClick(View view)
@@ -623,5 +631,22 @@ public class MainActivity extends AppCompatActivity
             while (c.moveToNext());
         }
         c.close();
+//TODO Прорисовка таблицы
+
+    }
+
+
+    // convert from bitmap to byte array
+    public static byte[] getBytes(Bitmap bitmap)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    // convert from byte array to bitmap
+    public static Bitmap getImage(byte[] image)
+    {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 }
