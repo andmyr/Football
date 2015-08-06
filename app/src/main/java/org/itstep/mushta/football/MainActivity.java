@@ -358,6 +358,9 @@ public class MainActivity extends AppCompatActivity
             long rowID = db.insert("teams", null, contentValues);
             Log.d("TAG", "Вставили " + rowID);
             editTextTeamName.setText("");
+            ImageView picView = (ImageView) findViewById(R.id.picture);
+            //Уберем картинку
+            picView.setImageResource(0);
             thumbnailBitmap = null;
         } else
         {
@@ -394,7 +397,7 @@ public class MainActivity extends AppCompatActivity
             {
                 ImageView picView = (ImageView) findViewById(R.id.picture);
                 thumbnailBitmap = (Bitmap) data.getExtras().get("data");
-                thumbnailBitmap = getResizedBitmap(thumbnailBitmap, 64, 65);
+                thumbnailBitmap = getResizedBitmap(thumbnailBitmap, 64, 64);
                 picView.setImageBitmap(thumbnailBitmap);
             }
         }
@@ -423,25 +426,6 @@ public class MainActivity extends AppCompatActivity
                 bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
-
-    //Получение картинки из базы
-    public Bitmap getImage(String name)
-    {
-        String query = "select picture from teams where name=" + name;
-        Cursor cur = db.rawQuery(query, null);
-        if (cur.moveToFirst())
-        {
-            byte[] imgByte = cur.getBlob(0);
-            cur.close();
-            return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
-        }
-        if (cur != null && !cur.isClosed())
-        {
-            cur.close();
-        }
-        return null;
-    }
-
 
     public void onSaveGameClick(View view)
     {
