@@ -1,6 +1,5 @@
 package org.itstep.mushta.football;
 
-import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -10,14 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -33,7 +30,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -42,8 +38,6 @@ public class MainActivity extends AppCompatActivity
 
     //public static int intCounter = 1;
 
-    private Spinner spinner;
-    private Spinner spinner2;
     private String[] mScreenTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -59,8 +53,6 @@ public class MainActivity extends AppCompatActivity
     private SQLiteDatabase db;
     private ArrayList<Team> teamList = new ArrayList<>();
     private Bitmap thumbnailBitmap;
-    private ListView list;
-    private LazyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -190,8 +182,8 @@ public class MainActivity extends AppCompatActivity
             }
             c.close();
         }
-        spinner = (Spinner) findViewById(R.id.spinner);
-        spinner2 = (Spinner) findViewById(R.id.spinner2);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner spinner2 = (Spinner) findViewById(R.id.spinner2);
         // адаптер
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, strTeamList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -422,9 +414,8 @@ public class MainActivity extends AppCompatActivity
         // RESIZE THE BIT MAP
         matrix.postScale(scaleWidth, scaleHeight);
         // "RECREATE" THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(
-                bm, 0, 0, width, height, matrix, false);
-        return resizedBitmap;
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
     }
 
     public void onSaveGameClick(View view)
@@ -595,8 +586,8 @@ public class MainActivity extends AppCompatActivity
 
         Team[] arrTeams = teamList.toArray(new Team[teamList.size()]);
 
-        list = (ListView) findViewById(R.id.listView);
-        adapter = new LazyAdapter(this, arrTeams);
+        ListView list = (ListView) findViewById(R.id.listView);
+        LazyAdapter adapter = new LazyAdapter(this, arrTeams);
         list.setAdapter(adapter);
 
     }
