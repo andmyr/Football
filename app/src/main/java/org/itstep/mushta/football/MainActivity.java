@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
     private SQLiteDatabase db;
 
     private ArrayList<Team> teamList = new ArrayList<>();
-    private Bitmap thePic;
+    private Bitmap thumbnailBitmap;
     //private Team team;
 
 
@@ -350,9 +350,9 @@ public class MainActivity extends AppCompatActivity
             contentValues.put("goals_in", 0);
             contentValues.put("total", 0);
 
-            if (thePic != null)
+            if (thumbnailBitmap != null)
             {
-                contentValues.put("picture", getBytes(thePic));
+                contentValues.put("picture", getBytes(thumbnailBitmap));
             }
 
             long rowID = db.insert("teams", null, contentValues);
@@ -391,48 +391,15 @@ public class MainActivity extends AppCompatActivity
             // Вернулись от приложения Камера
             if (requestCode == CAMERA_CAPTURE)
             {
-                // Получим Uri снимка
-                picUri = data.getData();
-                // кадрируем его
-                performCrop();
+                ImageView picView = (ImageView)findViewById(R.id.picture);
+                thumbnailBitmap = (Bitmap) data.getExtras().get("data");
+                picView.setImageBitmap(thumbnailBitmap);
+                //insert(getBytes(thumbnailBitmap));
             }
-            // Вернулись из операции кадрирования
-            else if (requestCode == PIC_CROP)
-            {
-                Bundle extras = data.getExtras();
-                // Получим кадрированное изображение
-                thePic = extras.getParcelable("data");
-                // передаём его в ImageView
-                ImageView picView = (ImageView) findViewById(R.id.imageView);
-                picView.setImageBitmap(thePic);
-                // Запись картинки в базу
-                //TODO Переделать на добавление объекта Team
-                //insert(getBytes(thePic));
-            }
+
         }
     }
 
-    private void performCrop()
-    {
-        try
-        {
-            // Намерение для кадрирования. Не все устройства поддерживают его
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(picUri, "image/*");
-            cropIntent.putExtra("crop", "true");
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, PIC_CROP);
-        } catch (ActivityNotFoundException anfe)
-        {
-            String errorMessage = "Извините, но ваше устройство не поддерживает кадрирование";
-            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
 
     //Добавление картинки в базу
     public long insert(byte[] image)

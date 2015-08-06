@@ -42,7 +42,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imageView"
+        android:id="@+id/picture"
         android:layout_below="@+id/buttonAddPhoto"
         android:contentDescription="pic"
         android:layout_above="@+id/buttonSave"/>
