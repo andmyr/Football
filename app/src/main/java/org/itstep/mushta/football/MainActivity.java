@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
 {
     final int CAMERA_CAPTURE = 1;
 
-    public static int intCounter = 1;
+    //public static int intCounter = 1;
 
     private Spinner spinner;
     private Spinner spinner2;
@@ -394,12 +394,20 @@ public class MainActivity extends AppCompatActivity
             {
                 ImageView picView = (ImageView) findViewById(R.id.picture);
                 thumbnailBitmap = (Bitmap) data.getExtras().get("data");
-                thumbnailBitmap = getResizedBitmap(thumbnailBitmap, 100, 100);
+                thumbnailBitmap = getResizedBitmap(thumbnailBitmap, 64, 65);
                 picView.setImageBitmap(thumbnailBitmap);
             }
         }
     }
 
+    /**
+     * Изменение размера картинки
+     *
+     * @param bm        - картинка
+     * @param newWidth  - новая ширина
+     * @param newHeight - новая высота
+     * @return - картинка с измененным размером
+     */
     private Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight)
     {
         int width = bm.getWidth();
@@ -415,20 +423,6 @@ public class MainActivity extends AppCompatActivity
                 bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
-
-    //Добавление картинки в базу
-  /*  public long insert(byte[] image)
-    {
-        return db.insert("teams", null, createContentValues(image));
-    }
-
-    private ContentValues createContentValues(byte[] image)
-    {
-        ContentValues cv = new ContentValues();
-        cv.put("picture", image);
-        return cv;
-    }*/
-
 
     //Получение картинки из базы
     public Bitmap getImage(String name)
@@ -521,10 +515,6 @@ public class MainActivity extends AppCompatActivity
                 " ,total = " + team.getTotal() +
                 " WHERE Name = '" + team.getName() + "'";
 
-       /* String query = "UPDATE teams" +
-                " SET total_games = 4, win = 1, draw = 0, loss = 2, goals_out = 1, goals_in = 4" +
-                " WHERE Name ='1'";*/
-
         db = dbhelper.getWritableDatabase();
         db.execSQL(query);
     }
@@ -605,7 +595,6 @@ public class MainActivity extends AppCompatActivity
                 {
                     picture = getImage(imgByte);
                 }
-
                 int totalGames = c.getInt(totalGamesColIndex);
                 int win = c.getInt(winColIndex);
                 int draw = c.getInt(drawColIndex);
@@ -620,7 +609,6 @@ public class MainActivity extends AppCompatActivity
         }
         c.close();
 
-        //
         Team[] arrTeams = teamList.toArray(new Team[teamList.size()]);
 
         list = (ListView) findViewById(R.id.listView);
@@ -628,7 +616,6 @@ public class MainActivity extends AppCompatActivity
         list.setAdapter(adapter);
 
     }
-
 
     // convert from bitmap to byte array
     public static byte[] getBytes(Bitmap bitmap)

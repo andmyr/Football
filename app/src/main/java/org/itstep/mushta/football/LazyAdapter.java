@@ -49,6 +49,7 @@ public class LazyAdapter extends BaseAdapter
         public TextView textTotalGames;
         public TextView textWin;
         public TextView textDraw;
+        public TextView textLoss;
         public TextView textGoals;
         public TextView textTotal;
         public ImageView image;
@@ -68,6 +69,7 @@ public class LazyAdapter extends BaseAdapter
             holder.textTotalGames = (TextView) vi.findViewById(R.id.textViewTotalGames);
             holder.textWin = (TextView) vi.findViewById(R.id.textViewWin);
             holder.textDraw = (TextView) vi.findViewById(R.id.textViewDraw);
+            holder.textLoss = (TextView) vi.findViewById(R.id.textViewLoss);
             holder.textGoals = (TextView) vi.findViewById(R.id.textViewGoals);
             holder.textTotal = (TextView) vi.findViewById(R.id.textViewTotal);
 
@@ -78,15 +80,17 @@ public class LazyAdapter extends BaseAdapter
             holder = (ViewHolder) vi.getTag();
         }
 
-        holder.textCounter.setText(MainActivity.intCounter++ + ".   ");
-        holder.textName.setText(data[position].getName() + "   ");
-        holder.textTotalGames.setText(data[position].getTotalGames() + "   ");
-        holder.textWin.setText(data[position].getWin() + "   ");
-        holder.textDraw.setText(data[position].getDraw() + "   ");
-        holder.textGoals.setText(data[position].getGoalsOut() + " - " + data[position].getGoalsIn() + "    ");
-        holder.textTotal.setText(data[position].getTotal() + " ");
+        holder.textCounter.setText((position + 1) + ".");
+        //MainActivity.intCounter++;
+        holder.textName.setText(data[position].getName() + "");
+        holder.textTotalGames.setText(data[position].getTotalGames() + "");
+        holder.textWin.setText(data[position].getWin() + "");
+        holder.textDraw.setText(data[position].getDraw() + "");
+        holder.textLoss.setText(data[position].getLoss() + "");
+        holder.textGoals.setText(data[position].getGoalsOut() + " - " + data[position].getGoalsIn() + "");
+        holder.textTotal.setText(data[position].getTotal() + "");
 
-        holder.image.setTag(data[position].getBitmap());
+        holder.image.setImageBitmap(data[position].getBitmap());
         return vi;
     }
 }
