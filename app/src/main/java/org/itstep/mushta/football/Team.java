@@ -51,6 +51,19 @@ public class Team
         this.total = total;
     }
 
+    public Team(String name, Bitmap bitmap, int totalGames, int win, int draw, int loss, int goalsOut, int goalsIn, int total)
+    {
+        this.name = name;
+        this.bitmap = bitmap;
+        this.totalGames = totalGames;
+        this.win = win;
+        this.draw = draw;
+        this.loss = loss;
+        this.goalsOut = goalsOut;
+        this.goalsIn = goalsIn;
+        this.total = total;
+    }
+
     /**
      * @param firstTeamScore  - Число забитых голов
      * @param secondTeamScore - Число пропущеных голов

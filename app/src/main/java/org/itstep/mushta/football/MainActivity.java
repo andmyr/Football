@@ -1,5 +1,6 @@
 package org.itstep.mushta.football;
 
+import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,16 +33,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 {
     final int CAMERA_CAPTURE = 1;
-    final int PIC_CROP = 2;
 
-    public Spinner spinner;
-    public Spinner spinner2;
+    public static int intCounter = 1;
 
+    private Spinner spinner;
+    private Spinner spinner2;
     private String[] mScreenTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -48,19 +51,16 @@ public class MainActivity extends AppCompatActivity
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private DBHelper dbhelper;
-    private Uri picUri;
     private EditText editTextTeam1Goals;
     private EditText editTextTeam2Goals;
     private ArrayList<String> strTeamList = new ArrayList<>(); //список для хранения имен команд
     private String strTeam1;
     private String strTeam2;
-
     private SQLiteDatabase db;
-
     private ArrayList<Team> teamList = new ArrayList<>();
     private Bitmap thumbnailBitmap;
-    //private Team team;
-
+    private ListView list;
+    private LazyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -358,6 +358,7 @@ public class MainActivity extends AppCompatActivity
             long rowID = db.insert("teams", null, contentValues);
             Log.d("TAG", "Вставили " + rowID);
             editTextTeamName.setText("");
+            thumbnailBitmap = null;
         } else
         {
             Log.d("TAG", "Команда уже есть в списке.");
@@ -391,18 +392,32 @@ public class MainActivity extends AppCompatActivity
             // Вернулись от приложения Камера
             if (requestCode == CAMERA_CAPTURE)
             {
-                ImageView picView = (ImageView)findViewById(R.id.picture);
+                ImageView picView = (ImageView) findViewById(R.id.picture);
                 thumbnailBitmap = (Bitmap) data.getExtras().get("data");
+                thumbnailBitmap = getResizedBitmap(thumbnailBitmap, 100, 100);
                 picView.setImageBitmap(thumbnailBitmap);
-                //insert(getBytes(thumbnailBitmap));
             }
-
         }
     }
 
+    private Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight)
+    {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
+    }
 
     //Добавление картинки в базу
-    public long insert(byte[] image)
+  /*  public long insert(byte[] image)
     {
         return db.insert("teams", null, createContentValues(image));
     }
@@ -412,16 +427,14 @@ public class MainActivity extends AppCompatActivity
         ContentValues cv = new ContentValues();
         cv.put("picture", image);
         return cv;
-    }
+    }*/
 
 
     //Получение картинки из базы
     public Bitmap getImage(String name)
     {
-
         String query = "select picture from teams where name=" + name;
         Cursor cur = db.rawQuery(query, null);
-
         if (cur.moveToFirst())
         {
             byte[] imgByte = cur.getBlob(0);
@@ -432,7 +445,6 @@ public class MainActivity extends AppCompatActivity
         {
             cur.close();
         }
-
         return null;
     }
 
@@ -576,6 +588,7 @@ public class MainActivity extends AppCompatActivity
             do
             {
                 int nameColIndex = c.getColumnIndex("Name");
+                int pictureIndex = c.getColumnIndex("picture");
                 int totalGamesColIndex = c.getColumnIndex("total_games");
                 int winColIndex = c.getColumnIndex("win");
                 int drawColIndex = c.getColumnIndex("draw");
@@ -585,6 +598,14 @@ public class MainActivity extends AppCompatActivity
                 int totalIndex = c.getColumnIndex("total");
 
                 String name = c.getString(nameColIndex);
+
+                byte[] imgByte = c.getBlob(pictureIndex);
+                Bitmap picture = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
+                if (imgByte != null)
+                {
+                    picture = getImage(imgByte);
+                }
+
                 int totalGames = c.getInt(totalGamesColIndex);
                 int win = c.getInt(winColIndex);
                 int draw = c.getInt(drawColIndex);
@@ -593,12 +614,18 @@ public class MainActivity extends AppCompatActivity
                 int goalsIn = c.getInt(goalsInColIndex);
                 int total = c.getInt(totalIndex);
 
-                teamList.add(new Team(name, totalGames, win, draw, loss, goalsOut, goalsIn, total));
+                teamList.add(new Team(name, picture, totalGames, win, draw, loss, goalsOut, goalsIn, total));
             }
             while (c.moveToNext());
         }
         c.close();
-//TODO Прорисовка таблицы
+
+        //
+        Team[] arrTeams = teamList.toArray(new Team[teamList.size()]);
+
+        list = (ListView) findViewById(R.id.listView);
+        adapter = new LazyAdapter(this, arrTeams);
+        list.setAdapter(adapter);
 
     }
 
