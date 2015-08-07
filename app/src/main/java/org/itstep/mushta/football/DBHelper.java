@@ -11,7 +11,7 @@ import android.util.Log;
 public class DBHelper extends SQLiteOpenHelper
 {
     private static final String DATABASE_NAME = "football.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public DBHelper(Context context)
     {
@@ -23,7 +23,7 @@ public class DBHelper extends SQLiteOpenHelper
     {
         //Таблица команд
         sqLiteDatabase.execSQL("CREATE TABLE [teams] (\n" +
-                // "  [ID] integer primary key autoincrement, \n" +
+                "  [ID] integer primary key autoincrement, \n" +
                 "  [Name] VARCHAR NOT NULL, \n" +
                 "  [picture] BLOB, \n" +
                 "  [total_games] INT, \n" +
@@ -46,12 +46,12 @@ public class DBHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2)
     {
-        /*Log.w("SQLite", "Обновляемся с версии " + i + " на версию " + i2);
+        Log.w("SQLite", "Обновляемся с версии " + i + " на версию " + i2);
         // Удаляем старую таблицу и создаём новую
-        sqLiteDatabase.execSQL("DROP TABLE IF IT EXISTS teams");
-        sqLiteDatabase.execSQL("DROP TABLE IF IT EXISTS games");
+        sqLiteDatabase.execSQL("DROP TABLE teams");
+        sqLiteDatabase.execSQL("DROP TABLE games");
         // Создаём новую таблицу
-        onCreate(sqLiteDatabase);*/
+        onCreate(sqLiteDatabase);
     }
 
 

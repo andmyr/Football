@@ -32,7 +32,7 @@
                 android:text="Эмблема"
                 android:id="@+id/textView2"
                 android:layout_column="0"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:layout_gravity="right"/>
 
             <TextView

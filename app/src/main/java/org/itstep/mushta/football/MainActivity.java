@@ -35,8 +35,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
 {
     final int CAMERA_CAPTURE = 1;
-
-    //public static int intCounter = 1;
+    final int NEW_SIZE = 80; // Резмер картинки-эмблемы команды (NEW_SIZE X NEW_SIZE)
 
     private String[] mScreenTitles;
     private DrawerLayout mDrawerLayout;
@@ -65,8 +64,7 @@ public class MainActivity extends AppCompatActivity
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, mScreenTitles));
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mScreenTitles));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -81,7 +79,6 @@ public class MainActivity extends AppCompatActivity
                 R.string.drawer_close /* "close drawer" description */
         )
         {
-
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view)
             {
@@ -176,7 +173,7 @@ public class MainActivity extends AppCompatActivity
                         str = str.concat(c.getString(c.getColumnIndex(cn)));
                         strTeamList.add(str);
                     }
-                    Log.d("TAG", str);
+                    //Log.d("TAG", str);
 
                 } while (c.moveToNext());
             }
@@ -269,7 +266,6 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment).commit();
-
             // Highlight the selected item, update the title, and close the drawer
             mDrawerList.setItemChecked(position, true);
             setTitle(mScreenTitles[position]);
@@ -287,11 +283,6 @@ public class MainActivity extends AppCompatActivity
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
     }
-
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
@@ -345,13 +336,19 @@ public class MainActivity extends AppCompatActivity
             if (thumbnailBitmap != null)
             {
                 contentValues.put("picture", getBytes(thumbnailBitmap));
+            } else
+            {
+                //Вставим стандартную картинку
+                Bitmap tmpBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
+                tmpBitmap = getResizedBitmap(tmpBitmap, NEW_SIZE, NEW_SIZE);
+                contentValues.put("picture", getBytes(tmpBitmap));
             }
 
             long rowID = db.insert("teams", null, contentValues);
             Log.d("TAG", "Вставили " + rowID);
             editTextTeamName.setText("");
             ImageView picView = (ImageView) findViewById(R.id.picture);
-            //Уберем картинку
+            //Уберем картинку с экрана
             picView.setImageResource(0);
             thumbnailBitmap = null;
         } else
@@ -389,7 +386,7 @@ public class MainActivity extends AppCompatActivity
             {
                 ImageView picView = (ImageView) findViewById(R.id.picture);
                 thumbnailBitmap = (Bitmap) data.getExtras().get("data");
-                thumbnailBitmap = getResizedBitmap(thumbnailBitmap, 64, 64);
+                thumbnailBitmap = getResizedBitmap(thumbnailBitmap, NEW_SIZE, NEW_SIZE);
                 picView.setImageBitmap(thumbnailBitmap);
             }
         }
@@ -431,6 +428,7 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e)
         {
             Toast.makeText(this, "Неверный формат счета игры", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         db = dbhelper.getWritableDatabase();
@@ -441,12 +439,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         //Проверка на наличие такой же игры
-        Cursor c = db.rawQuery("SELECT first_team, second_team FROM Games WHERE ((first_team = '" + strTeam1 + "' AND second_team = '" + strTeam2 + "')" +
+        Cursor c = db.rawQuery("SELECT first_team, second_team FROM Games WHERE ((first_team = '" + strTeam1 + "" +
+                "' AND second_team = '" + strTeam2 + "')" +
                 " OR (first_team = '" + strTeam2 + "' AND second_team = '" + strTeam1 + "'))", null);
         if (c.getCount() < 1)
         {
             Toast.makeText(this, "Нет такой игры, добавляем!.", Toast.LENGTH_SHORT).show();
-            Log.d("TAG", "Нет такой игры, добавляем в базу");
+            //Log.d("TAG", "Нет такой игры, добавляем в базу");
             String insertQuery = "INSERT INTO games (first_team, second_team, first_team_score, second_team_score)" +
                     " VALUES (" + strTeam1 + ", " + strTeam2 + ", " + team1Goals + ", " + team2Goals + ")";
             db.execSQL(insertQuery);
@@ -529,7 +528,6 @@ public class MainActivity extends AppCompatActivity
             int total = c.getInt(totalIndex);
 
             team = new Team(name, totalGames, win, draw, loss, goalsOut, goalsIn, total);
-
         }
         c.close();
         return team;
@@ -585,7 +583,6 @@ public class MainActivity extends AppCompatActivity
         c.close();
 
         Team[] arrTeams = teamList.toArray(new Team[teamList.size()]);
-
         ListView list = (ListView) findViewById(R.id.listView);
         LazyAdapter adapter = new LazyAdapter(this, arrTeams);
         list.setAdapter(adapter);
