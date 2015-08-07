@@ -450,7 +450,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "Нет такой игры, добавляем!.", Toast.LENGTH_SHORT).show();
             //Log.d("TAG", "Нет такой игры, добавляем в базу");
             String insertQuery = "INSERT INTO games (first_team, second_team, first_team_score, second_team_score)" +
-                    " VALUES (" + strTeam1 + ", " + strTeam2 + ", " + team1Goals + ", " + team2Goals + ")";
+                    " VALUES ('" + strTeam1 + "', '" + strTeam2 + "', " + team1Goals + ", " + team2Goals + ")";
             db.execSQL(insertQuery);
 
             editTextTeam1Goals.setText("");
