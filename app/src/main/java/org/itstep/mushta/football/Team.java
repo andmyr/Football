@@ -17,18 +17,6 @@ public class Team
     private int goalsIn;
     private int total;
 
-    public Team(String name)
-    {
-        this.name = name;
-        this.totalGames = 0;
-        this.win = 0;
-        this.draw = 0;
-        this.loss = 0;
-        this.goalsOut = 0;
-        this.goalsIn = 0;
-        this.total = 0;
-    }
-
     /**
      * @param name       - Имя
      * @param totalGames - Сыграно игр
@@ -127,11 +115,6 @@ public class Team
     public int getGoalsOut()
     {
         return goalsOut;
-    }
-
-    public void setBitmap(Bitmap bitmap)
-    {
-        this.bitmap = bitmap;
     }
 
     public int getTotal()

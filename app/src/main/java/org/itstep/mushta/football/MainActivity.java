@@ -53,6 +53,20 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Team> teamList = new ArrayList<>();
     private Bitmap thumbnailBitmap;
 
+    // convert from bitmap to byte array
+    public static byte[] getBytes(Bitmap bitmap)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    // convert from byte array to bitmap
+    public static Bitmap getImage(byte[] image)
+    {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -104,7 +118,6 @@ public class MainActivity extends AppCompatActivity
         }
         dbhelper = new DBHelper(this);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -226,16 +239,6 @@ public class MainActivity extends AppCompatActivity
                 strTeam2 = strTeamList.get(0);
             }
         });
-    }
-
-    /* The click listener for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener
-    {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-        {
-            selectItem(position);
-        }
     }
 
     /**
@@ -419,8 +422,8 @@ public class MainActivity extends AppCompatActivity
     {
         editTextTeam1Goals = (EditText) findViewById(R.id.editTextTeam1Goals);
         editTextTeam2Goals = (EditText) findViewById(R.id.editTextTeam2Goals);
-        int team1Goals = 0;
-        int team2Goals = 0;
+        int team1Goals;
+        int team2Goals;
         try
         {
             team1Goals = Integer.valueOf(editTextTeam1Goals.getText().toString());
@@ -589,17 +592,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    // convert from bitmap to byte array
-    public static byte[] getBytes(Bitmap bitmap)
+    /* The click listener for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener
     {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        return stream.toByteArray();
-    }
-
-    // convert from byte array to bitmap
-    public static Bitmap getImage(byte[] image)
-    {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            selectItem(position);
+        }
     }
 }
