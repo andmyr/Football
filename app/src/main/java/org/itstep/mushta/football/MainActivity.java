@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity
     public void onLoadRatingClick(View view)
     {
         teamList.clear();
-        String query = "SELECT * FROM teams ORDER BY total DESC";
+        String query = "SELECT * FROM teams ORDER BY total DESC, goals_out - goals_in DESC";
         db = dbhelper.getWritableDatabase();
         Cursor c = db.rawQuery(query, null);
         if (c.moveToFirst())
