@@ -25,5 +25,10 @@ public class AddGameFragment extends Fragment {
         return rootView;
     }
 
-
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        //TODO Добавить обновление списка команд при показе фрагмента
+    }
 }
