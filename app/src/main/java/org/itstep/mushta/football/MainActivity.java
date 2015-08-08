@@ -16,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -458,7 +457,7 @@ public class MainActivity extends AppCompatActivity
         } else
         {
             Toast.makeText(this, "Есть такая игра, обновляем!.", Toast.LENGTH_SHORT).show();
-            Log.d("TAG", "Есть такая игра, запрос о обновлении");
+            //Log.d("TAG", "Есть такая игра, запрос о обновлении");
             overrideGame();
         }
 
