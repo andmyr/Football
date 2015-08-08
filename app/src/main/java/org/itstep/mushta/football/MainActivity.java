@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity
         } else
         {
             // Error
-            Log.e(this.getClass().getName(), "Error. Fragment is not created");
+            //Log.e(this.getClass().getName(), "Error. Fragment is not created");
         }
     }
 
@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             long rowID = db.insert("teams", null, contentValues);
-            Log.d("TAG", "Вставили " + rowID);
+            //Log.d("TAG", "Вставили " + rowID);
             editTextTeamName.setText("");
             ImageView picView = (ImageView) findViewById(R.id.picture);
             //Уберем картинку с экрана
@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity
             thumbnailBitmap = null;
         } else
         {
-            Log.d("TAG", "Команда уже есть в списке.");
+            //Log.d("TAG", "Команда уже есть в списке.");
             Toast.makeText(this, "Команда уже есть в списке.", Toast.LENGTH_LONG).show();
         }
         c.close();
