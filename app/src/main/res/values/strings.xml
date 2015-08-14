@@ -22,4 +22,10 @@
     <string name="btnAddGame">Сохранить игру</string>
     <string name="str_reload_teams">Обновить список команд</string>
     <string name="btnRaiting">Общий рейтинг</string>
+    <string name="teamExists">"Команда уже есть в списке."</string>
+    <string name="notSupportPhoto">"Ваше устройство не поддерживает съемку"</string>
+    <string name="wrongGameCount">"Неверный формат счета игры"</string>
+    <string name="selectDifferentTeams">"Выберете разные команды!"</string>
+    <string name="updateGame">"Есть такая игра, обновляем!"</string>
+    <string name="noSuchGame">"Нет такой игры, добавляем!."</string>
 </resources>

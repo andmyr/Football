@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity
         } else
         {
             //Log.d("TAG", "Команда уже есть в списке.");
-            Toast.makeText(this, "Команда уже есть в списке.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.teamExists), Toast.LENGTH_LONG).show();
         }
         c.close();
         db.close();
@@ -372,7 +372,7 @@ public class MainActivity extends AppCompatActivity
         } catch (ActivityNotFoundException e)
         {
             // Выводим сообщение об ошибке
-            String errorMessage = "Ваше устройство не поддерживает съемку";
+            String errorMessage = getResources().getString(R.string.notSupportPhoto);
             Toast toast = Toast
                     .makeText(this, errorMessage, Toast.LENGTH_SHORT);
             toast.show();
@@ -429,14 +429,14 @@ public class MainActivity extends AppCompatActivity
             team2Goals = Integer.valueOf(editTextTeam2Goals.getText().toString());
         } catch (Exception e)
         {
-            Toast.makeText(this, "Неверный формат счета игры", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.wrongGameCount), Toast.LENGTH_SHORT).show();
             return;
         }
 
         db = dbhelper.getWritableDatabase();
         if (strTeam1.equals(strTeam2))
         {
-            Toast.makeText(this, "Выберете разные команды!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.selectDifferentTeams), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -446,7 +446,7 @@ public class MainActivity extends AppCompatActivity
                 " OR (first_team = '" + strTeam2 + "' AND second_team = '" + strTeam1 + "'))", null);
         if (c.getCount() < 1)
         {
-            Toast.makeText(this, "Нет такой игры, добавляем!.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.noSuchGame), Toast.LENGTH_SHORT).show();
             //Log.d("TAG", "Нет такой игры, добавляем в базу");
             String insertQuery = "INSERT INTO games (first_team, second_team, first_team_score, second_team_score)" +
                     " VALUES ('" + strTeam1 + "', '" + strTeam2 + "', " + team1Goals + ", " + team2Goals + ")";
@@ -456,7 +456,7 @@ public class MainActivity extends AppCompatActivity
             editTextTeam2Goals.setText("");
         } else
         {
-            Toast.makeText(this, "Есть такая игра, обновляем!.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.updateGame), Toast.LENGTH_SHORT).show();
             //Log.d("TAG", "Есть такая игра, запрос о обновлении");
             overrideGame();
         }

@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import org.itstep.mushta.football.R;
 
 
-public class AddGameFragment extends Fragment {
+public class AddGameFragment extends Fragment
+{
 
     public AddGameFragment() {
     }
@@ -29,6 +30,6 @@ public class AddGameFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //TODO Добавить обновление списка команд при показе фрагмента
     }
+
 }
