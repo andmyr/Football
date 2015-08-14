@@ -545,6 +545,7 @@ public class MainActivity extends AppCompatActivity
     public void onLoadRatingClick(View view)
     {
         teamList.clear();
+        Bitmap picture = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
         String query = "SELECT * FROM teams ORDER BY total DESC, goals_out - goals_in DESC";
         db = dbhelper.getWritableDatabase();
         Cursor c = db.rawQuery(query, null);
@@ -565,10 +566,10 @@ public class MainActivity extends AppCompatActivity
                 String name = c.getString(nameColIndex);
 
                 byte[] imgByte = c.getBlob(pictureIndex);
-                Bitmap picture = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
+                Bitmap pictureTmp = picture;
                 if (imgByte != null)
                 {
-                    picture = getImage(imgByte);
+                    pictureTmp = getImage(imgByte);
                 }
                 int totalGames = c.getInt(totalGamesColIndex);
                 int win = c.getInt(winColIndex);
@@ -578,7 +579,7 @@ public class MainActivity extends AppCompatActivity
                 int goalsIn = c.getInt(goalsInColIndex);
                 int total = c.getInt(totalIndex);
 
-                teamList.add(new Team(name, picture, totalGames, win, draw, loss, goalsOut, goalsIn, total));
+                teamList.add(new Team(name, pictureTmp, totalGames, win, draw, loss, goalsOut, goalsIn, total));
             }
             while (c.moveToNext());
         }
