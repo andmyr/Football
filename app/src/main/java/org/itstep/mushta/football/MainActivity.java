@@ -390,6 +390,11 @@ public class MainActivity extends AppCompatActivity
                 thumbnailBitmap = (Bitmap) data.getExtras().get("data");
                 thumbnailBitmap = getResizedBitmap(thumbnailBitmap, NEW_SIZE, NEW_SIZE);
                 picView.setImageBitmap(thumbnailBitmap);
+                if (thumbnailBitmap != null)
+                {
+                    thumbnailBitmap.recycle();
+                    thumbnailBitmap = null;
+                }
             }
         }
     }
@@ -412,6 +417,7 @@ public class MainActivity extends AppCompatActivity
         Matrix matrix = new Matrix();
         // RESIZE THE BIT MAP
         matrix.postScale(scaleWidth, scaleHeight);
+
         // "RECREATE" THE NEW BITMAP
         return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
 
