@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity
 
     public void refreshTeamList(View view)
     {
+        strTeamList.clear();
         dbhelper = new DBHelper(this);
         db = dbhelper.getWritableDatabase();
 
